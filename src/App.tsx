@@ -1,9 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { AppShell, Box, Button, Text } from '@mantine/core';
+import { AppShell, Box, Text } from '@mantine/core';
 
 export default function App() {
     const [position, setPosition] = useState<GeolocationPosition | null>(null);
+
+    useEffect(() => {
+        const w = navigator.geolocation.watchPosition(setPosition);
+        return () => navigator.geolocation.clearWatch(w);
+    });
 
     return (
         <AppShell>
@@ -17,17 +22,8 @@ export default function App() {
                     alignItems: 'center',
                 }}
             >
-                <Button
-                    onClick={() =>
-                        navigator.geolocation.watchPosition(
-                            setPosition,
-                            console.log
-                        )
-                    }
-                >
-                    Start
-                </Button>
-                <Text>{position && JSON.stringify(position)}</Text>
+                <Text>{position && position.coords.latitude}</Text>
+                <Text>{position && position.coords.longitude}</Text>
             </Box>
         </AppShell>
     );

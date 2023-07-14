@@ -1,5 +1,6 @@
 import _station from '../assets/station.json';
 
+// @ts-ignore
 const station = _station as Station[];
 
 export interface Station {

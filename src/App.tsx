@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react';
+import { AppShell, Box, Button, Text } from '@mantine/core';
 
-import { AppShell, Box, Text } from '@mantine/core';
+import { getNearestStation } from './utils/station';
+import { useGeolocationPosition } from './utils/useGeolocationPosition';
 
 export default function App() {
-    const [position, setPosition] = useState<GeolocationPosition | null>(null);
+    const position = useGeolocationPosition();
+    const latitude = position?.coords.latitude;
+    const longitude = position?.coords.longitude;
 
-    useEffect(() => {
-        const w = navigator.geolocation.watchPosition(setPosition);
-        return () => navigator.geolocation.clearWatch(w);
-    });
+    const nearestStation = position && getNearestStation(latitude!, longitude!);
 
     return (
         <AppShell>
@@ -22,8 +22,21 @@ export default function App() {
                     alignItems: 'center',
                 }}
             >
-                <Text>{position && position.coords.latitude}</Text>
-                <Text>{position && position.coords.longitude}</Text>
+                <Text>{latitude}</Text>
+                <Text>{longitude}</Text>
+                <Button
+                    onClick={() => {
+                        if (!latitude || !longitude) return;
+
+                        window.open(
+                            `https://www.google.com/maps/search/?api=1&query=${nearestStation?.geometry.coordinates[0][0][1]},${nearestStation?.geometry.coordinates[0][0][0]}`,
+                            '_blank'
+                        );
+                    }}
+                >
+                    Open GoogleMap
+                </Button>
+                <Text>{nearestStation && JSON.stringify(nearestStation)}</Text>
             </Box>
         </AppShell>
     );

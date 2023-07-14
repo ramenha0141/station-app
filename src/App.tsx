@@ -1,4 +1,4 @@
-import { AppShell, Box, Button, Text } from '@mantine/core';
+import { AppShell, Box, Text } from '@mantine/core';
 
 import { getNearestStation } from './utils/station';
 import { useGeolocationPosition } from './utils/useGeolocationPosition';
@@ -24,19 +24,8 @@ export default function App() {
             >
                 <Text>{latitude}</Text>
                 <Text>{longitude}</Text>
-                <Button
-                    onClick={() => {
-                        if (!latitude || !longitude) return;
-
-                        window.open(
-                            `https://www.google.com/maps/search/?api=1&query=${nearestStation?.geometry.coordinates[0][0][1]},${nearestStation?.geometry.coordinates[0][0][0]}`,
-                            '_blank'
-                        );
-                    }}
-                >
-                    Open GoogleMap
-                </Button>
-                <Text>{nearestStation && JSON.stringify(nearestStation)}</Text>
+                <Text>{nearestStation?.properties.N02_003}</Text>
+                <Text>{nearestStation?.properties.N02_005}</Text>
             </Box>
         </AppShell>
     );
